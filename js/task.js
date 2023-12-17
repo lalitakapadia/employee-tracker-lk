@@ -1,4 +1,5 @@
 const inquirer = require('inquirer');
+const Data = require('../js/data.js');
 
 function Task(){}
 
@@ -30,7 +31,8 @@ function getData (task) {
 
     switch(task) {
       case "View All Departments":
-        console.log("View All Departments");
+        const data = new Data();
+        let d = data.viewDepartments();
         break;
 
       case "View All Roles":
