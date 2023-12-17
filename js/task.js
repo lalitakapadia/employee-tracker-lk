@@ -28,19 +28,18 @@ Task.prototype.askQuestion = () => {
 
 
 function getData (task) {
-
+  const data = new Data();
     switch(task) {
       case "View All Departments":
-        const data = new Data();
         let d = data.viewDepartments();
         break;
 
       case "View All Roles":
-        console.log("View All Roles");
+        let r = data.viewAllRoles();
         break;
         
       case "View All Employees":
-        console.log("View All Employees");
+        let e = data.viewAllEmployees();
         break;
         
       case "Add a Department":
