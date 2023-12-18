@@ -1,37 +1,26 @@
 
 const mysql = require('mysql2');
+const CompanyDatabase = require('../js/data.js');
 
 const StringBuilder = require("string-builder");
-
-// Connect to database
-const db = mysql.createConnection(
-  {
-    host: 'localhost',
-    // MySQL username,
-    user: 'root',
-    // TODO: Add MySQL password here
-    password: '',
-    database: 'companyDb'
-  },
-  console.log(`Connected to the companyDb database.`)
-);
-
 
 function Department(){}
 
 Department.prototype.viewDepartments = () => {
+  const companyDatabase = new CompanyDatabase();
   const query = 'SELECT * FROM department';
   console.log("get in departments");
-  db.query(query, function(err, rows) {
+  companyDatabase.createConnection().query(query, function(err, rows) {
     if (err) { throw err; };
     console.log("rows: " + JSON.stringify(rows));
   });
 };
 // add department to database
 Department.prototype.addDepartment = (name) => {
+  const companyDatabase = new CompanyDatabase();
   const query = `INSERT INTO department(name) VALUES (?)`;
-  const params = { name: 'name'};
-  db.query(query, params, function (err, result) {
+  const params = [name];
+  companyDatabase.createConnection().query(query, params, function (err, result) {
     if (err) { throw err; };
     console.log("result: " + JSON.stringify(result));
   });
