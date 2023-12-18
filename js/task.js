@@ -1,5 +1,8 @@
 const inquirer = require('inquirer');
 const Data = require('../js/data.js');
+const Department = require('../js/departments.js');
+const Role = require('../js/roles.js');
+const Employee = require('../js/employees.js');
 
 function Task(){}
 
@@ -28,22 +31,24 @@ Task.prototype.askQuestion = () => {
 
 
 function getData (task) {
-  const data = new Data();
     switch(task) {
       case "View All Departments":
-        let d = data.viewDepartments();
+        const department1 = new Department();
+        let d = department1.viewDepartments();
         break;
 
       case "View All Roles":
-        let r = data.viewAllRoles();
+        const role = new Role();
+        let r = role.viewAllRoles();
         break;
         
       case "View All Employees":
-        let e = data.viewAllEmployees();
+        const  employee = new Employee();
+        let e = employee.viewAllEmployees();
         break;
         
       case "Add a Department":
-        console.log("Add a Department");
+        promptDepartment(); // calling addDepartment function to get user input
         break;
         
       case "Add a Role":
@@ -62,6 +67,24 @@ function getData (task) {
         console.log("Please select a valid task");
         break;
   }
+  };
+  
+
+
+
+   
+function promptDepartment(){
+  inquirer
+    .prompt([
+      {
+        type: "input",
+        name: "department",
+        message: "Enter Department Name:"
+      }
+    ]).then((answers) => {
+      const department = new Department();
+      department.addDepartment(answers.department);
+    });
   };
 
 
