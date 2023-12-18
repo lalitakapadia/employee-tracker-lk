@@ -1,5 +1,4 @@
 const inquirer = require('inquirer');
-const Data = require('../js/data.js');
 const Department = require('../js/departments.js');
 const Role = require('../js/roles.js');
 const Employee = require('../js/employees.js');

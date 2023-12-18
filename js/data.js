@@ -1,23 +1,18 @@
 // TODo this should be shared object use by like department, role, employee
 
 const mysql = require('mysql2');
+require('dotenv').config();
 
-const StringBuilder = require("string-builder");
+function CompanyDatabase(){}
 
 // Connect to database
-const db = mysql.createConnection(
+CompanyDatabase.prototype.createConnection = () => { 
+  return mysql.createConnection(
   {
     host: 'localhost',
-    // MySQL username,
     user: 'root',
-    // TODO: Add MySQL password here
-    password: '',
+    password: '', //process.env.DB_PASSWORD,
     database: 'companyDb'
-  },
-  console.log(`Connected to the companyDb database.`)
-);
-
-
-function Data(){}
-
-module.exports = Data;
+  });
+}
+module.exports = CompanyDatabase;
