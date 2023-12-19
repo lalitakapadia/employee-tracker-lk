@@ -51,7 +51,7 @@ function getData (task) {
         break;
         
       case "Add a Role":
-        console.log("Add a Role");
+       promptRole(); // calling addRole function to get user input
         break;
         
       case "Add an Employee":
@@ -85,6 +85,33 @@ function promptDepartment(){
       department.addDepartment(answers.department);
     });
   };
+
+  function promptRole(){
+    inquirer
+      .prompt([
+        {
+          type: "input",
+          name: "title",
+          message: "What is the name of the role?",
+        },
+        {
+          type: "input",
+          name: "salary",
+          message: "What is the salary rate?",
+        },
+        {
+          type: "input",
+          name: "department",
+          mesaage: "Which department is the role under"
+          //choices: departmentChoices
+
+        }
+      ])
+      .then((answers) => {
+        const role = new Role();
+        role.addRole(answers.title, answers.salary, answers.department);
+      });
+   }
 
 
   module.exports = Task;

@@ -1,7 +1,6 @@
 
 const mysql = require('mysql2');
 const CompanyDatabase = require('../js/data.js');
-const StringBuilder = require("string-builder");
 
 function Role(){}
 
@@ -15,5 +14,16 @@ function Role(){}
     console.log("rows: " + JSON.stringify(rows));
   });
 };
+
+Role.prototype.addRole = (title, salary, department) => {
+  const companyDatabase = new CompanyDatabase();
+  const query = `INSERT INTO role(title, salary, department_id) VALUES (?, ?, ?)`;
+  const params = [title, salary, department];
+  companyDatabase.createConnection().query(query, params, function (err, result) {
+    if (err) { throw err; };
+    console.log("result: " + JSON.stringify(result));
+  });
+};
+
 
 module.exports = Role;
