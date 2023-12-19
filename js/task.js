@@ -55,7 +55,7 @@ function getData (task) {
         break;
         
       case "Add an Employee":
-        console.log("Add an Employee");
+        promptEmployee(); // calling addEmployee function to get user input
         break;
         
       case "Update an Employee Role":
@@ -67,11 +67,8 @@ function getData (task) {
         break;
   }
   };
-  
 
-
-
-   
+// function for add department
 function promptDepartment(){
   inquirer
     .prompt([
@@ -86,6 +83,7 @@ function promptDepartment(){
     });
   };
 
+  // function for add Role to Department
   function promptRole(){
     inquirer
       .prompt([
@@ -112,6 +110,38 @@ function promptDepartment(){
         role.addRole(answers.title, answers.salary, answers.department);
       });
    }
+  
+   // function for add new employees to the department
+   function promptEmployee() {
+    inquirer
+      .prompt([
+      {
+        type: 'input',
+        name: 'first_name',
+        message: 'What is the first name of the new employee?'
+      },
+      {
+        type: 'input',
+        name: 'last_name',
+        message: 'What is the last name of the new employee?'
+      },
+      {
+        type: 'input',
+        name: 'role_id',
+        message: 'What role is the new employee in?',
+      },
+      {
+        type: 'input',
+        name: 'manager_id',
+        message: 'Who is the manager for the new employee?'
+      }
 
+      ])
+      .then((answers) => {
+        const role = new Employee();
+        role.addEmployee(answers.first_name, answers.last_name, answers.role_id, answers.manager_id);
+      });
+
+}
 
   module.exports = Task;

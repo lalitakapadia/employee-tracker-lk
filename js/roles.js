@@ -26,4 +26,5 @@ Role.prototype.addRole = (title, salary, department) => {
 };
 
 
+
 module.exports = Role;
