@@ -11,7 +11,7 @@ CompanyDatabase.prototype.createConnection = () => {
   {
     host: 'localhost',
     user: 'root',
-    password: '', //process.env.DB_PASSWORD,
+    password: 'LKBootcamp#2023', //process.env.DB_PASSWORD,
     database: 'companyDb'
   });
 }

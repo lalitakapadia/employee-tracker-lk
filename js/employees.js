@@ -20,7 +20,17 @@ Employee.prototype.viewAllEmployees = () => {
     if (err) { throw err; }
     console.log("rows:" + JSON.stringify(rows));
   });
-
 }
+
+Employee.prototype.addEmployee = (first_name, last_name, role_id, manager_id) => {
+  const companyDatabase = new CompanyDatabase();
+  const query = `INSERT INTO employee(first_name, last_name, role_id, manager_id) VALUES (?, ?, ?, ?)`;
+  const params = [first_name,  last_name, role_id, manager_id];
+  companyDatabase.createConnection().query(query, params, function (err, result) {
+    if (err) { throw err; };
+    console.log("result: " + JSON.stringify(result));
+  });
+};
+
 
 module.exports = Employee;
