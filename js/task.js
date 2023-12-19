@@ -2,6 +2,7 @@ const inquirer = require('inquirer');
 const Department = require('../js/departments.js');
 const Role = require('../js/roles.js');
 const Employee = require('../js/employees.js');
+const CompanyDatabase = require('../js/data.js');
 
 function Task(){}
 
@@ -51,7 +52,7 @@ function getData (task) {
         break;
         
       case "Add a Role":
-       promptRole(); // calling addRole function to get user input
+        promptRole(); // calling addRole function to get user input
         break;
         
       case "Add an Employee":
@@ -84,8 +85,27 @@ function promptDepartment(){
   };
 
   // function for add Role to Department
-  function promptRole(){
-    inquirer
+  async function promptRole()  {
+    const companyDatabase = new CompanyDatabase();
+    const query = 'SELECT * FROM department';
+    let departments = [];
+    companyDatabase.createConnection().query(query, (err, rows) =>{
+      if (err) { 
+        throw err; 
+      } else {
+
+        for (let i = 0; i < rows.length; i++) {
+          let current = {
+            key: rows[i].id,
+            value: rows[i].name
+          }
+          departments.push(current);
+        } 
+        console.log(JSON.stringify(departments));
+      }
+    });
+
+    await inquirer
       .prompt([
         {
           type: "input",
@@ -98,16 +118,21 @@ function promptDepartment(){
           message: "What is the salary rate?",
         },
         {
-          type: "input",
+          type: "list",
           name: "department",
-          mesaage: "Which department is the role under"
-          //choices: departmentChoices
+          mesaage: "Which department is the role under",
+          choices: departments
 
         }
       ])
       .then((answers) => {
-        const role = new Role();
-        role.addRole(answers.title, answers.salary, answers.department);
+        for (const d in departments) {
+          console.log(departments[d]);
+          if ( departments[d].value === answers.department) {
+            const role = new Role();
+            role.addRole(answers.title, answers.salary,  departments[d].key);
+        }
+      }
       });
    }
   
