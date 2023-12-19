@@ -6,14 +6,20 @@ const StringBuilder = require("string-builder");
 
 function Department(){}
 
-Department.prototype.viewDepartments = () => {
+Department.prototype.viewDepartments =  () => {
   const companyDatabase = new CompanyDatabase();
   const query = 'SELECT * FROM department';
   console.log("get in departments");
-  companyDatabase.createConnection().query(query, function(err, rows) {
-    if (err) { throw err; };
-    console.log("rows: " + JSON.stringify(rows));
+  companyDatabase.createConnection().query(query, (err, rows) =>{
+    console.log("in db query...");
+    if (err) { 
+      throw err; 
+    } else {
+      console.log("rows**: " + JSON.stringify(rows));
+    }
+    return rows;
   });
+  
 };
 // add department to database
 Department.prototype.addDepartment = (name) => {
