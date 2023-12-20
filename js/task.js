@@ -60,7 +60,7 @@ function getData (task) {
         break;
         
       case "Update an Employee Role":
-        console.log("Update an Employee Role");
+        promptUpdateEmployee();
         break;
       
       default:
@@ -224,6 +224,90 @@ function promptDepartment(){
         const e = new Employee();
         e.addEmployee(answers.first_name, answers.last_name, role_id, manager_id);
       });
+}
+
+async function promptUpdateEmployee() {
+  const companyDatabase = new CompanyDatabase();
+  let query = 'SELECT id, title FROM role';
+  let roles1 = [];
+  companyDatabase.createConnection().query(query, (err, rows) =>{
+    if (err) { 
+      throw err; 
+    } else {
+
+      for (let i = 0; i < rows.length; i++) {
+        let current = {
+          key: rows[i].id,
+          value: rows[i].title
+        }
+        roles1.push(current);
+      } 
+    }
+  });
+
+  console.log(`*******${JSON.stringify(roles1)}`);
+
+  // get all the employees
+  query = 'SELECT id, first_name, last_name FROM employee';
+  var employees1 = [];
+  companyDatabase.createConnection().query(query, (err, rows) =>{
+    if (err) { 
+      throw err; 
+    } else {
+      
+      for (let i = 0; i < rows.length; i++) {
+        let current = {
+          key: rows[i].id,
+          value: rows[i].first_name + " " + rows[i].last_name
+        }
+        employees1.push(current);
+        console.log(JSON.stringify(current));
+        console.log(JSON.stringify(employees1));
+      } 
+    }
+  });
+
+  console.log(`*******${JSON.stringify(employees1)}`);
+  await inquirer
+      .prompt([
+        {
+          type: 'list', // change this to list
+          name: 'employee_name',
+          message: 'Select the employee to update his/her role?',
+          choices: employees1
+        },
+        {
+          type: 'list',
+          name: 'role_title',
+          message: 'What is the new role?',
+          choices: roles1
+        } 
+      ])
+      .then((answers) => {
+
+        //declare a varible to store employee id
+        let employee_id = 0;
+        //loop through the employees to find selected employee
+        for (const e in employees1) {
+          if (employees1[e].value === answers.employee_name) {
+            // when match is found, store the value in the variable
+            employee_id = employees1[e].key;
+            break;
+          }
+        }
+        
+        let role_id = 0;
+        for (const r in roles1) {
+          if ( roles1[r].value === answers.role_title) {
+            role_id = roles1[r].key;
+            break;
+          }
+        }
+
+        const e = new Employee();
+        e.updateEmployee(employee_id, role_id);
+      });
+
 }
 
 
