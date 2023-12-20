@@ -1,35 +1,40 @@
 
-const mysql = require('mysql2');
 const CompanyDatabase = require('../js/data.js');
-
+const inquirer = require('inquirer');
 const StringBuilder = require("string-builder");
 
 function Department(){}
 
-Department.prototype.viewDepartments =  () => {
+// view department function
+Department.prototype.viewDepartments = async () => {
   const companyDatabase = new CompanyDatabase();
   const query = 'SELECT * FROM department';
-  console.log("get in departments");
-  companyDatabase.createConnection().query(query, (err, rows) =>{
-    console.log("in db query...");
-    if (err) { 
-      throw err; 
-    } else {
-      console.log("rows**: " + JSON.stringify(rows));
-    }
-    return rows;
-  });
-  
+  const con = await companyDatabase.createConnection();
+  const departmentRows = await con.execute(query);
+  return departmentRows;
 };
-// add department to database
-Department.prototype.addDepartment = (name) => {
+
+// function is to prompt and add department
+Department.prototype.addDepartment = () => {
+  inquirer
+    .prompt([
+      {
+        type: "input",
+        name: "department",
+        message: "Enter Department Name:"
+      }
+    ]).then((answers) => {
+      return insertDepartment(answers.department);
+    });
+};
+
+async function insertDepartment(department) {
   const companyDatabase = new CompanyDatabase();
-  const query = `INSERT INTO department(name) VALUES (?)`;
-  const params = [name];
-  companyDatabase.createConnection().query(query, params, function (err, result) {
-    if (err) { throw err; };
-    console.log("result: " + JSON.stringify(result));
-  });
-};
+  const sql = `INSERT INTO department(name) VALUES ('${department}')`;
+  const con = await companyDatabase.createConnection();
+  const result = await con.execute(sql);
+  console.log(result);
+  return result;
+}
 
 module.exports = Department;
