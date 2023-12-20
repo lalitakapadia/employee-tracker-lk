@@ -1,4 +1,4 @@
-
+// import mysql2
 const mysql = require('mysql2');
 const CompanyDatabase = require('../js/data.js');
 

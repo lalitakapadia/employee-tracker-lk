@@ -85,7 +85,7 @@ function promptDepartment(){
   };
 
   // function for add Role to Department
-  async function promptRole()  {
+  function promptRole()  {
     const companyDatabase = new CompanyDatabase();
     const query = 'SELECT * FROM department';
     let departments = [];
@@ -105,7 +105,7 @@ function promptDepartment(){
       }
     });
 
-    await inquirer
+    inquirer
       .prompt([
         {
           type: "input",
@@ -133,40 +133,99 @@ function promptDepartment(){
             role.addRole(answers.title, answers.salary,  departments[d].key);
         }
       }
-      });
+    });
    }
   
    // function for add new employees to the department
-   function promptEmployee() {
-    inquirer
-      .prompt([
-      {
-        type: 'input',
-        name: 'first_name',
-        message: 'What is the first name of the new employee?'
-      },
-      {
-        type: 'input',
-        name: 'last_name',
-        message: 'What is the last name of the new employee?'
-      },
-      {
-        type: 'input',
-        name: 'role_id',
-        message: 'What role is the new employee in?',
-      },
-      {
-        type: 'input',
-        name: 'manager_id',
-        message: 'Who is the manager for the new employee?'
-      }
+  function promptEmployee() {
 
-      ])
-      .then((answers) => {
-        const role = new Employee();
-        role.addEmployee(answers.first_name, answers.last_name, answers.role_id, answers.manager_id);
+    const companyDatabase = new CompanyDatabase();
+    let query = 'SELECT id, title FROM role';
+    let roles = [];
+    companyDatabase.createConnection().query(query, (err, rows) =>{
+      if (err) { 
+        throw err; 
+      } else {
+  
+        for (let i = 0; i < rows.length; i++) {
+          let current = {
+            key: rows[i].id,
+            value: rows[i].title
+          }
+          roles.push(current);
+        } 
+      }
+    });
+
+    // get all the employees
+      query = 'SELECT id, first_name, last_name FROM employee';
+      let employees = [];
+      companyDatabase.createConnection().query(query, (err, rows) =>{
+        if (err) { 
+          throw err; 
+        } else {
+    
+          for (let i = 0; i < rows.length; i++) {
+            let current = {
+              key: rows[i].id,
+              value: rows[i].first_name + " " + rows[i].last_name
+            }
+            employees.push(current);
+          } 
+        }
       });
 
+    inquirer
+      .prompt([
+        {
+          type: 'input',
+          name: 'first_name',
+          message: 'What is the first name of the new employee?'
+        },
+        {
+          type: 'input',
+          name: 'last_name',
+          message: 'What is the last name of the new employee?'
+        },
+        {
+          type: 'list',
+          name: 'role_title',
+          message: 'What role is the new employee in?',
+          choices: roles
+        },
+        {
+          type: 'list', // change this to list
+          name: 'manager_name',
+          message: 'Who is the manager for the new employee?',
+          choices: employees
+        }
+      ])
+      .then((answers) => {
+
+        //declare a varible to store employee id
+        let manager_id = 0;
+        //loop through the employees to find selected employee
+        for (const e in employees) {
+          if (employees[e].value === answers.manager_name) {
+            // when match is found, store the value in the variable
+            manager_id = employees[e].key;
+            break;
+          }
+        }
+        
+        let role_id = 0;
+        for (const r in roles) {
+          if ( roles[r].value === answers.role_title) {
+            role_id = roles[r].key;
+            break;
+          }
+        }
+
+        const e = new Employee();
+        e.addEmployee(answers.first_name, answers.last_name, role_id, manager_id);
+      });
 }
 
-  module.exports = Task;
+
+
+module.exports = Task;
