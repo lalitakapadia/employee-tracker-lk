@@ -32,5 +32,14 @@ Employee.prototype.addEmployee = (first_name, last_name, role_id, manager_id) =>
   });
 };
 
+Employee.prototype.updateEmployee = (employee_id, new_role_id) => {
+  const companyDatabase = new CompanyDatabase();
+  const query = `UPDATE employee SET role_id = ? WHERE id = ?`;
+  const params = [new_role_id, employee_id];
+  companyDatabase.createConnection().query(query, params, function (err, result) {
+    if (err) { throw err; };
+    console.log("result: " + JSON.stringify(result));
+  });
+};
 
 module.exports = Employee;
