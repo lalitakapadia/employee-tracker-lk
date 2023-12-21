@@ -189,5 +189,9 @@ Employee.prototype.updateEmployeeRole = async () => {
     console.log("result: " + JSON.stringify(result));
   };
 
+//View employees by manager.
+Employee.prototype.viewEmployeeByManager = async () => {
+ 
+}
 
 module.exports = Employee;
