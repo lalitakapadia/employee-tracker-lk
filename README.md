@@ -32,8 +32,12 @@ To run this application locally, follow this steps:
  User can add new departments, roles, and employees, as needed.
  User can update employee roles, as needed.
 
-![Alt text](/images/entity-relationship-diagram.png)
-
 Video demonstrate Link for Assignment
 
-https://drive.google.com/file/d/1LC5s0rUSlUVF4Lt7M6xA-T0mKCwfvTY6/view?usp=drive_link
+https://watch.screencastify.com/v/Z4gaisKwXh8dFsbi97VD
+
+![Alt text](/images/entity-relationship-diagram.png)
+
+
+
+

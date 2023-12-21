@@ -12,8 +12,9 @@ Employee.prototype.viewAllEmployees = async() => {
   // query.append is to make it easier to write long string query into small string
   const query = new StringBuilder();
   // e = employee, r = role, d = department
-  query.append('SELECT e.id, e.first_name, e.last_name, e.manager_id, r.title, r.salary, d.name ');
+  query.append('SELECT e.id, e.first_name, e.last_name, (e1.first_name) as manager , r.title, r.salary, d.name as department ');
   query.append('FROM employee e ');
+  query.append('LEFT OUTER JOIN employee e1 ON e.manager_id = e1.id ');
   query.append('INNER JOIN role r ON e.role_id = r.id ');
   query.append('INNER JOIN department d ON r.department_id = d.id');
   const con = await companyDatabase.createConnection();
@@ -86,7 +87,9 @@ async function insertEmployee(first_name, last_name, role_id, manager_id) {
 
   const con = await companyDatabase.createConnection();
   const result = await con.execute(query.toString());
-  console.log("result: " + JSON.stringify(result));
+  if(result[0].affectedRows === 1) {
+    console.log(`Employee ${first_name} ${last_name}  added successfully`);
+  }
 }
 
 
@@ -98,6 +101,7 @@ Employee.prototype.updateEmployeeRole = async () => {
   let roleRows, employeeRows;
   let selectedEmployeeIndex;
   let selectedRoleIndex;
+  let employee_name, role_name;
 
   await role.viewAllRoles()
   .then(([roleResult]) => {
@@ -129,17 +133,21 @@ Employee.prototype.updateEmployeeRole = async () => {
     .then((answers) => {
       selectedEmployeeIndex = employeeRows.findIndex(r => r.first_name + ' ' + r.last_name === answers.employee_name);
       selectedRoleIndex = roleRows.findIndex(r => r.title === answers.role_title);
+      role_name = answers.role_title;
+      employee_name = answers.employee_name;
     });
 
-    await updateEmployeeRoleDb(employees[selectedEmployeeIndex].key, roles[selectedRoleIndex].key);
+    await updateEmployeeRoleDb(employees[selectedEmployeeIndex].key,  roles[selectedRoleIndex].key,employee_name, role_name);
   }
 
-  async function updateEmployeeRoleDb (employee_id, new_role_id) {
+  async function updateEmployeeRoleDb (employee_id, new_role_id, employee_name, role_name) {
     const companyDatabase = new CompanyDatabase();
     const sql = `UPDATE employee SET role_id = '${new_role_id}' WHERE id = '${employee_id}'`;
     const con = await companyDatabase.createConnection();
     const result = await con.execute(sql.toString());
-    console.log("result: " + JSON.stringify(result));
+    if(result[0].affectedRows === 1) {
+      console.log(`Employee '${employee_name}' has new role ${role_name}`);
+    }
   };
 
   // additional functionality for assignment
@@ -151,6 +159,7 @@ Employee.prototype.updateEmployeeRole = async () => {
     let employeeRows;
     let selectedEmployeeIndex;
     let selectedManagerIndex;
+    let employee_name, manager_name;
 
     await employee.viewAllEmployees()
      .then(([employeeResult]) => {
@@ -175,15 +184,19 @@ Employee.prototype.updateEmployeeRole = async () => {
     .then((answers) => {
       selectedEmployeeIndex = employeeRows.findIndex(r => r.first_name + ' ' + r.last_name === answers.employee_name);
       selectedManagerIndex = employeeRows.findIndex(r => r.first_name + ' ' + r.last_name === answers.new_manager);
+      employee_name = answers.employee_name;
+      manager_name = answers.new_manager;
     });
-    await updateEmployeeManagerDb(employees[selectedEmployeeIndex].key, employees[selectedManagerIndex].key);
+    await updateEmployeeManagerDb(employees[selectedEmployeeIndex].key, employee_name, employees[selectedManagerIndex].key, manager_name);
   }
-  async function updateEmployeeManagerDb (employee_id, new_manager_id) {
+  async function updateEmployeeManagerDb (employee_id, employee_name, new_manager_id, manager_name) {
     const companyDatabase = new CompanyDatabase();
     const sql = `UPDATE employee SET manager_id = '${new_manager_id}' WHERE id = '${employee_id}'`;
     const con = await companyDatabase.createConnection();
     const result = await con.execute(sql.toString());
-    console.log("result: " + JSON.stringify(result));
+    if(result[0].affectedRows === 1) {
+      console.log(`Employee '${employee_name}' has new manager ${manager_name}`);
+    }
   };
 
 //View employees by manager.
