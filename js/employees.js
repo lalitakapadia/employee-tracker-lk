@@ -80,7 +80,6 @@ Employee.prototype.addEmployee = async () => {
   await insertEmployee(first_name, last_name, roles[selectedRoleIndex].key,  employees[selectedManagerIndex].key);
 };
 
-
 async function insertEmployee(first_name, last_name, role_id, manager_id) {
   const companyDatabase = new CompanyDatabase();
   const query = `INSERT INTO employee(first_name, last_name, role_id, manager_id) VALUES ('${first_name}', '${last_name}', '${role_id}', '${manager_id}')`;
@@ -143,8 +142,6 @@ Employee.prototype.updateEmployeeRole = async () => {
     console.log("result: " + JSON.stringify(result));
   };
 
-
-
   // additional functionality for assignment
   //  Update employee managers.
 
@@ -191,7 +188,19 @@ Employee.prototype.updateEmployeeRole = async () => {
 
 //View employees by manager.
 Employee.prototype.viewEmployeeByManager = async () => {
- 
+
+  const companyDatabase = new CompanyDatabase();
+  // string builder for displaying all employees in the department and their roles
+  // query.append is to make it easier to write long string query into small string
+  const query = new StringBuilder();
+  // e = employee, r = role, d = department
+  query.append('SELECT count(e.id) as total_employee, e1.first_name as manager_name ');
+  query.append('FROM employee e ');
+  query.append('INNER JOIN employee e1 ON e.manager_id = e1.id ');
+  query.append('GROUP BY e1.first_name');
+  const con = await companyDatabase.createConnection();
+  const employee = await con.execute(query.toString());
+  return employee;
 }
 
 module.exports = Employee;
