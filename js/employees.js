@@ -143,4 +143,51 @@ Employee.prototype.updateEmployeeRole = async () => {
     console.log("result: " + JSON.stringify(result));
   };
 
+
+
+  // additional functionality for assignment
+  //  Update employee managers.
+
+  Employee.prototype.updateEmployeeManager = async () => {
+    let employee = new Employee();
+    let employees = [];
+    let employeeRows;
+    let selectedEmployeeIndex;
+    let selectedManagerIndex;
+
+    await employee.viewAllEmployees()
+     .then(([employeeResult]) => {
+      employees = employeeResult.map(({id, first_name, last_name}) =>({key: id, value: first_name + ' ' + last_name}));
+      employeeRows = employeeResult;
+    });
+    await inquirer
+    .prompt([
+      {
+        type: 'list', // change this to list
+        name: 'employee_name',
+        message: 'Select the employee to update his/her manager?',
+        choices: employees
+      },
+      {
+        type: 'list',
+        name: 'new_manager',
+        message: 'Select new manager?',
+        choices: employees
+      } 
+    ])
+    .then((answers) => {
+      selectedEmployeeIndex = employeeRows.findIndex(r => r.first_name + ' ' + r.last_name === answers.employee_name);
+      selectedManagerIndex = employeeRows.findIndex(r => r.first_name + ' ' + r.last_name === answers.new_manager);
+    });
+    await updateEmployeeManagerDb(employees[selectedEmployeeIndex].key, employees[selectedManagerIndex].key);
+  }
+  async function updateEmployeeManagerDb (employee_id, new_manager_id) {
+    const companyDatabase = new CompanyDatabase();
+    const sql = `UPDATE employee SET manager_id = '${new_manager_id}' WHERE id = '${employee_id}'`;
+    const con = await companyDatabase.createConnection();
+    const result = await con.execute(sql.toString());
+    console.log("result: " + JSON.stringify(result));
+  };
+
+
 module.exports = Employee;
