@@ -59,7 +59,6 @@ async function getData (choice) {
         break;
         
       case "Add a Department":
-        printTable;
         await department.addDepartment().then (task.askQuestion);
         break;
         

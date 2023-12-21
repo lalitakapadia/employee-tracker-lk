@@ -60,7 +60,9 @@ Role.prototype.addRole = async () => {
   const query = `INSERT INTO role(title, salary, department_id) VALUES ('${title}', '${salary}', '${department_id}')`;
   const con = await companyDatabase.createConnection();
   const result = await con.execute(query);
-  console.log("result: " + JSON.stringify(result));
+  if(result[0].affectedRows === 1) {
+    console.log(`Role '${title}' added successfully`);
+  }
  };
 
 module.exports = Role;

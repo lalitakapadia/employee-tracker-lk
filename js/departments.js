@@ -33,7 +33,9 @@ async function insertDepartment(department) {
   const sql = `INSERT INTO department(name) VALUES ('${department}')`;
   const con = await companyDatabase.createConnection();
   const result = await con.execute(sql);
-  console.log(result);
+  if(result[0].affectedRows === 1) {
+    console.log(`Department '${department}' added successfully`);
+  }
   return result;
 }
 
