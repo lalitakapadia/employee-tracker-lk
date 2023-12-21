@@ -22,6 +22,7 @@ Task.prototype.askQuestion = async () => {
           "Add a Role",
           "Add an Employee",
           "Update an Employee Role",
+          "Update Employee Manager",
           "Exit the program"
         ]
       }
@@ -73,6 +74,10 @@ async function getData (choice) {
       case "Update an Employee Role":
         await employee.updateEmployeeRole().then (task.askQuestion);
         break;
+        // extra functionality for assignment tasks
+      case "Update Employee Manager":
+        await employee.updateEmployeeManager().then (task.askQuestion);
+        break;  
       
       default:
         console.log("Ending the program");
