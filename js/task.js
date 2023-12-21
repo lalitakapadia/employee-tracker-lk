@@ -23,7 +23,7 @@ Task.prototype.askQuestion = async () => {
           "Add an Employee",
           "Update an Employee Role",
           "Update Employee Manager",
-          "View Employee by manager",
+          "View Employee by Manager",
           "Exit the program"
         ]
       }
@@ -59,6 +59,7 @@ async function getData (choice) {
         break;
         
       case "Add a Department":
+        printTable;
         await department.addDepartment().then (task.askQuestion);
         break;
         
@@ -81,7 +82,9 @@ async function getData (choice) {
         break;  
        //View employees by manager.
       case "View Employee by Manager":
-        await employee.viewEmployeeByManager().then (task.askQuestion);
+        employee.viewEmployeeByManager().then(([employeeRows]) => {
+          printTable(employeeRows);
+        }).then(task.askQuestion);
         break; 
       default:
         console.log("Ending the program");
