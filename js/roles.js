@@ -15,35 +15,44 @@ function Role(){}
 };
 
 // function for add Role to Department
-Role.prototype.addRole = () => {
+Role.prototype.addRole = async () => {
   const department = new Department();
-  department.viewDepartments()
-  .then(([departmentRows]) => {
-    let departments = departmentRows.map(({id, name}) =>({key: id, value: name}));
-    inquirer
-      .prompt([
-        {
-          type: "input",
-          name: "title",
-          message: "What is the name of the role?",
-        },
-        {
-          type: "input",
-          name: "salary",
-          message: "What is the salary rate?",
-        },
-        {
-          type: "list",
-          name: "department",
-          mesaage: "Which department is the role under",
-          choices: departments
-        }
-      ])
-      .then((answers) => {
-        let selectedDepartmentIndex = departmentRows.findIndex(r => r.name === answers.department);
-        insertRole(answers.title, answers.salary, departments[selectedDepartmentIndex].key);
-      });
-    });    
+  let departments = [];
+  let departmentRows;
+  let selectedDepartmentIndex;
+  let title, salary; 
+  
+  await department.viewDepartments()
+  .then(([rows]) => {
+     departments = rows.map(({id, name}) =>({key: id, value: name}));
+     departmentRows = rows;
+    });   
+
+  await  inquirer
+    .prompt([
+      {
+        type: "input",
+        name: "title",
+        message: "What is the name of the role?",
+      },
+      {
+        type: "input",
+        name: "salary",
+        message: "What is the salary rate?",
+      },
+      {
+        type: "list",
+        name: "department",
+        mesaage: "Which department is the role under",
+        choices: departments
+      }
+    ])
+    .then((answers) => {
+      selectedDepartmentIndex = departmentRows.findIndex(r => r.name === answers.department);
+      title = answers.title;
+      salary = answers.salary;
+    });
+    await insertRole(title, salary, departments[selectedDepartmentIndex].key);   
  };
 
  async function insertRole(title, salary, department_id) {

@@ -2,12 +2,13 @@ const inquirer = require('inquirer');
 const Department = require('../js/departments.js');
 const Role = require('../js/roles.js');
 const Employee = require('../js/employees.js');
+const { printTable } = require('console-table-printer');
 
 function Task(){}
  
-Task.prototype.askQuestion = () => {
+Task.prototype.askQuestion = async () => {
 
-  inquirer
+  await inquirer
     .prompt([
       {
         type: "list",
@@ -25,48 +26,48 @@ Task.prototype.askQuestion = () => {
         ]
       }
     ]).then((answers) => {
-      getData(answers.choice);
+       getData(answers.choice);
     });
   };
 
 
-function getData (choice) {
+async function getData (choice) {
   const department = new Department();
   const role = new Role();
   const employee = new Employee();
   const task = new Task();
-  
+
     switch(choice) {
       case "View All Departments":
         department.viewDepartments().then(([departmentRows]) => {
-          console.log(departmentRows);
+          printTable(departmentRows);
         }).then(task.askQuestion);
         break;
 
       case "View All Roles":
         let r = role.viewAllRoles().then(([roleRows]) => {
-          console.log(roleRows);
+          printTable(roleRows);
         }).then(task.askQuestion);
         break;
         
       case "View All Employees":
         let e = employee.viewAllEmployees().then(([employeeRows]) => {
-          console.log(employeeRows);
+          printTable(employeeRows);
         }).then(task.askQuestion);
         break;
         
       case "Add a Department":
-        department.addDepartment();
+        await department.addDepartment().then (task.askQuestion);
         break;
         
       case "Add a Role":
         // calling addRole function to get user input
-        role.addRole();
+        await role.addRole().then (task.askQuestion);
         break;
         
       case "Add an Employee":
         // calling addEmployee function to get user input
-        employee.addEmployee();
+        await employee.addEmployee().then (task.askQuestion);
         break;
         
       case "Update an Employee Role":
