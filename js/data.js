@@ -15,4 +15,6 @@ CompanyDatabase.prototype.createConnection = () => {
     database: 'companyDb'
   });
 }
+
+
 module.exports = CompanyDatabase;
