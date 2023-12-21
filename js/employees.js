@@ -91,39 +91,48 @@ async function insertEmployee(first_name, last_name, role_id, manager_id) {
 }
 
 
-    Employee.prototype.updateEmployeeRole = async () => {
-      const role = new Role();
-      role.viewAllRoles()
-      .then(([roleResult]) => {
-        let roles = roleResult.map(({id, title}) =>({key: id, value: title}));
-        
-        const employee = new Employee();
-        employee.viewAllEmployees()
-        .then(([employeeResult]) => {
-          let employees = employeeResult.map(({id, first_name, last_name}) =>({key: id, value: first_name + ' ' + last_name}));
-          
-          inquirer
-          .prompt([
-            {
-              type: 'list', // change this to list
-              name: 'employee_name',
-              message: 'Select the employee to update his/her role?',
-              choices: employees
-            },
-            {
-              type: 'list',
-              name: 'role_title',
-              message: 'What is the new role?',
-              choices: roles
-            } 
-          ])
-          .then((answers) => {
-            let selectedEmployeeIndex = employeeResult.findIndex(r => r.first_name + ' ' + r.last_name === answers.employee_name);
-            let selectedRoleIndex = roleResult.findIndex(r => r.title === answers.role_title);
-            updateEmployeeRoleDb(employees[selectedEmployeeIndex].key, roles[selectedRoleIndex].key);
-          });
-        });
-      });
+Employee.prototype.updateEmployeeRole = async () => {
+  const role = new Role();
+  const employee = new Employee();
+  let roles = [];
+  let employees = [];
+  let roleRows, employeeRows;
+  let selectedEmployeeIndex;
+  let selectedRoleIndex;
+
+  await role.viewAllRoles()
+  .then(([roleResult]) => {
+      roles = roleResult.map(({id, title}) =>({key: id, value: title}));
+      roleRows = roleResult;
+  });
+
+  await employee.viewAllEmployees()
+  .then(([employeeResult]) => {
+      employees = employeeResult.map(({id, first_name, last_name}) =>({key: id, value: first_name + ' ' + last_name}));
+      employeeRows = employeeResult;
+    });
+
+    await inquirer
+    .prompt([
+      {
+        type: 'list', // change this to list
+        name: 'employee_name',
+        message: 'Select the employee to update his/her role?',
+        choices: employees
+      },
+      {
+        type: 'list',
+        name: 'role_title',
+        message: 'What is the new role?',
+        choices: roles
+      } 
+    ])
+    .then((answers) => {
+      selectedEmployeeIndex = employeeRows.findIndex(r => r.first_name + ' ' + r.last_name === answers.employee_name);
+      selectedRoleIndex = roleRows.findIndex(r => r.title === answers.role_title);
+    });
+
+    await updateEmployeeRoleDb(employees[selectedEmployeeIndex].key, roles[selectedRoleIndex].key);
   }
 
   async function updateEmployeeRoleDb (employee_id, new_role_id) {

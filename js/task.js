@@ -71,11 +71,11 @@ async function getData (choice) {
         break;
         
       case "Update an Employee Role":
-        employee.updateEmployeeRole();
+        await employee.updateEmployeeRole().then (task.askQuestion);
         break;
       
       default:
-        console.log("Please select a valid task");
+        console.log("Ending the program");
         break;
   }
   };
