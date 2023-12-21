@@ -15,8 +15,8 @@ Department.prototype.viewDepartments = async () => {
 };
 
 // function is to prompt and add department
-Department.prototype.addDepartment = () => {
-  inquirer
+Department.prototype.addDepartment = async () => {
+  await inquirer
     .prompt([
       {
         type: "input",
