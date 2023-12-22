@@ -1,6 +1,7 @@
 
 const CompanyDatabase = require('../js/data.js');
 const inquirer = require('inquirer');
+//const { Connection } = require('mysql2/typings/mysql/lib/Connection.js');
 const StringBuilder = require("string-builder");
 
 function Department(){}
@@ -38,5 +39,8 @@ async function insertDepartment(department) {
   }
   return result;
 }
+
+
+
 
 module.exports = Department;
