@@ -216,4 +216,5 @@ Employee.prototype.viewEmployeeByManager = async () => {
   return employee;
 }
 
+
 module.exports = Employee;

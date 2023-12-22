@@ -24,6 +24,7 @@ Task.prototype.askQuestion = async () => {
           "Update an Employee Role",
           "Update Employee Manager",
           "View Employee by Manager",
+          //"View Employee by Department",
           "Exit the program"
         ]
       }
@@ -85,6 +86,11 @@ async function getData (choice) {
           printTable(employeeRows);
         }).then(task.askQuestion);
         break; 
+
+      // case "View Employee by Department":
+      //   viewEmployeeByDepartment();
+      //   break; 
+
       default:
         console.log("Ending the program");
         break;
