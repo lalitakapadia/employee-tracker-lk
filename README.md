@@ -31,10 +31,12 @@ To run this application locally, follow this steps:
  User can interact with the application to view departments, roles, and employees.
  User can add new departments, roles, and employees, as needed.
  User can update employee roles, as needed.
+ user can delete the deparment.
 
 Video demonstrate Link for Assignment
 
 https://watch.screencastify.com/v/Z4gaisKwXh8dFsbi97VD
+
 
 ![Alt text](/images/entity-relationship-diagram.png)
 
