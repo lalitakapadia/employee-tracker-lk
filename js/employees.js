@@ -216,5 +216,21 @@ Employee.prototype.viewEmployeeByManager = async () => {
   return employee;
 }
 
+//view Employee by department
+
+async function viewEmployeeByDepartment() {
+  const companyDatabase = new CompanyDatabase();
+  const sql = `SELECT employee.first_name, employee.last_name,
+  department.department_name AS department
+  FROM employee
+  LEFT JOIN role ON role.employee.role_id = role_id
+  LEFT JOIN department ON role.department_id = department.id`;
+  const con = await companyDatabase.createConnection();
+  const department = await con.execute(sql);
+  if(result[0].affectedRows === 1) {
+    console.log(result + ' rows affected');
+  }
+  return result;
+};
 
 module.exports = Employee;

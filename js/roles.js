@@ -61,7 +61,8 @@ Role.prototype.addRole = async () => {
   const con = await companyDatabase.createConnection();
   const result = await con.execute(query);
   if(result[0].affectedRows === 1) {
-    console.log(`Role '${title}' added successfully`);
+    console.log(`Role
+     '${title}' added successfully`);
   }
  };
 
