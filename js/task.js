@@ -24,7 +24,7 @@ Task.prototype.askQuestion = async () => {
           "Update an Employee Role",
           "Update Employee Manager",
           "View Employee by Manager",
-          "View Employee by Department",
+          //"View Employee by Department",
           "Exit the program",
           "Delete Department"
         ]
@@ -88,11 +88,11 @@ async function getData (choice) {
         }).then(task.askQuestion);
         break; 
 
-      case "View Employee by Department":
-        viewEmployeeByDepartment().then(([departmentRows]) => {
-          printTable(departmentRows);
-        }).then(task.askQuestion);
-        break; 
+      // case "View Employee by Department":
+      //   viewEmployeeByDepartment().then(([departmentRows]) => {
+      //     printTable(departmentRows);
+      //   }).then(task.askQuestion);
+      //   break; 
 
       case 'Delete Department':
         department.deleteDepartment().then(task.askQuestion);
