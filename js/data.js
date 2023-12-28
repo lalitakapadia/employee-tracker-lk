@@ -12,7 +12,7 @@ CompanyDatabase.prototype.createConnection = () => {
     host: 'localhost',
     port: 3306,
     user: 'root',
-    password: '',
+    password: 'LKBootcamp#2023',
     database: 'companyDb'
   });
 }

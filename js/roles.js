@@ -66,4 +66,39 @@ Role.prototype.addRole = async () => {
   }
  };
 
+ // function to delete  a role
+ Role.prototype.deleteRole = async () => {
+  let role = new Role();
+  let roles = [];
+  let roleRows;
+  let selectedRoleIndex;
+
+  await role.viewAllRoles()
+  .then(([rows]) => {
+    roles = rows.map(({id, title}) =>({key: id, value: title}));
+    roleRows = rows;
+    });   
+
+  await  inquirer
+    .prompt([
+      {
+        type: "list",
+        name: "role",
+        message: "Select a role to delete?",
+        choices: roles
+      }
+    ]) 
+    .then((answers) => {
+      selectedRoleIndex = roleRows.findIndex(r => r.title === answers.role);
+    });
+  const companyDatabase = new CompanyDatabase();
+  const sql = `DELETE FROM role WHERE id = ${roles[selectedRoleIndex].key}`;
+  const con = await companyDatabase.createConnection();
+  const result = await con.execute(sql);
+  if(result[0].affectedRows === 1) {
+    console.log(`Role '${roles[selectedRoleIndex].value}' deleted successfully`);
+  }
+  return result;
+}
+ 
 module.exports = Role;
