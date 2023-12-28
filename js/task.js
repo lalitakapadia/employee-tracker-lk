@@ -25,8 +25,11 @@ Task.prototype.askQuestion = async () => {
           "Update Employee Manager",
           "View Employee by Manager",
           //"View Employee by Department",
+          "Delete Department",
+          "Delete a Role",
+          "Delete a Employee",
           "Exit the program",
-          "Delete Department"
+          
         ]
       }
     ]).then((answers) => {
@@ -98,6 +101,12 @@ async function getData (choice) {
         department.deleteDepartment().then(task.askQuestion);
         break;  
 
+     case 'Delete a Role':
+        role.deleteRole().then(task.askQuestion);
+        break;  
+     case 'Delete a Employee':
+        employee.deleteEmployee().then(task.askQuestion);
+        
       default:
         console.log("Ending the program");
         break;

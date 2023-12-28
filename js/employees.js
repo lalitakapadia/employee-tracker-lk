@@ -232,5 +232,42 @@ async function viewEmployeeByDepartment() {
   }
   return result;
 };
+  // function for delete employee 
+ Employee.prototype.deleteEmployee = async () => {
+  let employee = new Employee();
+  let employees = [];
+  let employeeRows;
+  let selectedEmployeeIndex;
+
+  await employee.viewAllEmployees()
+  .then(([rows]) => {
+    employees = rows.map(({id, first_name, last_name}) =>({key: id, value: first_name + ' ' + last_name}));
+    employeeRows = rows;
+    });   
+
+  await  inquirer
+    .prompt([
+      {
+        type: "list",
+        name: "employee",
+        message: "Select employee to delete?",
+        choices: employees
+      }
+    ]) 
+    .then((answers) => {
+      selectedEmployeeIndex = employeeRows.findIndex(e => (e.first_name + ' ' + e.last_name).trim() === answers.employee.trim());
+      console.log(selectedEmployeeIndex);
+      console.log(answers.employee);
+    });
+  const companyDatabase = new CompanyDatabase();
+  const sql = `DELETE FROM employee WHERE id = ${employees[selectedEmployeeIndex].key}`;
+  const con = await companyDatabase.createConnection();
+  const result = await con.execute(sql);
+  if(result[0].affectedRows === 1) {
+    console.log(`Employee '${employees[selectedEmployeeIndex].value}' deleted successfully`);
+  }
+  return result;
+}
+
 
 module.exports = Employee;
